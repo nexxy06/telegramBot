@@ -1,3 +1,11 @@
+import datetime
+
+import requests
+from aiogram import types
+
+from weather_telegram_bot import dp
+
+
 @dp.message_handler(content_types=types.ContentTypes.TEXT, commands=['weather'])
 async def answer_to_messages(message: types.Message):
     await message.reply("Введите город")
@@ -29,4 +37,3 @@ async def answer_to_messages(message: types.Message):
 
         except:
             await message.reply("Такой города существует???")
-
