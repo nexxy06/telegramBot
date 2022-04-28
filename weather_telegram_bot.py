@@ -66,7 +66,7 @@ async def answer_to_messages(message: types.Message):
             max_temperature = data['main']['temp_max']
             min_temperature = data['main']['temp_min']
 
-            await message.reply((f"***{datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}***\n"
+            await message.reply((f"***{datetime.datetime.now().strftime('%Y-%m-%d%H:%M')}***\n"
                                  f"Погода в городе: {city}\nТемпература: {cur_weather} C°\n"
                                  f"Максимальная температра достигнет {max_temperature} C°\n"
                                  f"Минимальная температура достинет {min_temperature} C°\n"
@@ -108,9 +108,10 @@ async def kurs(message: types.Message):
     soup_e = BeautifulSoup(page_e.content, 'html.parser')
 
     # Получаем нужное для нас значение и возвращаем его
-    convert_d = soup_d.findAll("span", {"class": "DFlfde", "class": "SwHCTb", "data-precision": 2})
-    convert_e = soup_e.findAll("span", {"class": "DFlfde", "class": "SwHCTb", "data-precision": 2})
-    await message.reply(convert_e, convert_d)
+    convert_d = soup_d.findAll("span", {"class": "SwHCTb", "data-precision": 2})
+    convert_e = soup_e.findAll("span", {"class": "SwHCTb", "data-precision": 2})
+    await message.reply(f'{convert_d[0].text} курс доллара')
+    await message.reply(f'{convert_e[0].text} курс евро')
 
 
 if __name__ == '__main__':
