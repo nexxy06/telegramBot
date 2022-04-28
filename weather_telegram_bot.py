@@ -13,7 +13,7 @@ dp = Dispatcher(bot)
 
 @dp.message_handler(commands=["start"])
 async def start_command(message: types.Message):
-    privet = open('кот.jpg', 'rb')
+    privet = open('бот.jpg', 'rb')
     await bot.send_photo(chat_id=message.chat.id, photo=privet)
     await message.reply("Привет!\nЯ самый крутой бот на свете!\nнапиши команду /help, чтобы узнать мои возмоности")
 
@@ -24,11 +24,14 @@ async def help(message: types.Message):
     await bot.send_photo(chat_id=message.chat.id, photo=sos)
     await message.reply(
         'Это может почти всё!\n1 команда:/start - ты начнешь сначала\n2 команда /weather - ты сможешь узанть про погду в любои городе\n'
-        '3 команда /news - ты можешь узнать про самые посление новости в мире')
+        '3 команда /news - ты можешь узнать про самые посление новости в мире\n4 команда /curs - благодаря ей ты можешь узнать актуальные курс евро и доллара'
+        '\n5 команда /music - покажет лучшие приложения и сайты для прослушивания музыки\n6 команда /time покажет самое точное время')
 
 
 @dp.message_handler(commands=["news"])
 async def get_news(message: types.Message):
+    privet = open('новости.jpg', 'rb')
+    await bot.send_photo(chat_id=message.chat.id, photo=privet)
     URL = "https://quote.rbc.ru/?target_type=posts&q=python&order_by=date"
 
     page = requests.get(URL)
@@ -50,8 +53,9 @@ async def answer_to_messages(message: types.Message):
     await message.reply("Введите город")
 
     @dp.message_handler()
-    async def answer_to_messages_1(town: types.Message):
-
+    async def answer_to_messages(town: types.Message):
+        #  privet = open('погода.jpg', 'rb')
+        #   await bot.send_photo(chat_id=message.chat.id, photo=privet)
         try:
             r = requests.get(
                 f"http://api.openweathermap.org/data/2.5/weather?q={town.text}&appid={open_weather_token}&units=metric"
@@ -86,17 +90,29 @@ async def echo_message(message: types.Message):
     async def answer_to_messages_1(word: types.Message):
         translator = Translator(from_lang='ru', to_lang='en')
         perevod_1 = translator.translate(word)
-        print(perevod_1)
         await message.reply(perevod_1)
 
 
 @dp.message_handler(commands=["music"])
 async def echo_message(message: types.Message):
-    await message.reply("https://music.yandex.ru/home\nhttps://vk.com/vkmusic")
+    #   privet = open('музыка.jpg', 'rb')
+    #   await bot.send_photo(chat_id=message.chat.id, photo=privet)
+    await message.reply(
+        "https://music.yandex.ru/home\nhttps://vk.com/vkmusic - лучшие приложения и сайты для прослушивания музыки")
+
+
+@dp.message_handler(commands=['time'])
+async def echo_message(message: types.Message):
+    privet = open('время.jpg', 'rb')
+    await bot.send_photo(chat_id=message.chat.id, photo=privet)
+    await message.reply(datetime.datetime.now().date())
+    await message.reply(datetime.datetime.now().time())
 
 
 @dp.message_handler(commands=['curs'])
 async def kurs(message: types.Message):
+    privet = open('курс.jpg', 'rb')
+    await bot.send_photo(chat_id=message.chat.id, photo=privet)
     headers = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36'}
     DOLLAR_RUB = 'https://www.google.com/search?sxsrf=ALeKk01NWm6viYijAo3HXYOEQUyDEDtFEw%3A1584716087546&source=hp&ei=N9l0XtDXHs716QTcuaXoAg&q=%D0%B4%D0%BE%D0%BB%D0%BB%D0%B0%D1%80+%D0%BA+%D1%80%D1%83%D0%B1%D0%BB%D1%8E&oq=%D0%B4%D0%BE%D0%BB%D0%BB%D0%B0%D1%80+&gs_l=psy-ab.3.0.35i39i70i258j0i131l4j0j0i131l4.3044.4178..5294...1.0..0.83.544.7......0....1..gws-wiz.......35i39.5QL6Ev1Kfk4'
@@ -112,6 +128,28 @@ async def kurs(message: types.Message):
     convert_e = soup_e.findAll("span", {"class": "SwHCTb", "data-precision": 2})
     await message.reply(f'{convert_d[0].text} курс доллара')
     await message.reply(f'{convert_e[0].text} курс евро')
+
+
+@dp.message_handler()
+async def echo_message(message):
+    if message.text.lower() == 'привет' or message.text == 'hello' or message.text == 'салам':
+        await message.reply('привет')
+        privet = open('привет.jpg', 'rb')
+        await bot.send_photo(chat_id=message.chat.id, photo=privet)
+    elif 'время' in message.text:
+        await message.reply('Вызовите команду /time')
+    elif 'новости' in message.text:
+        await message.reply('Вызовите команду /news')
+    elif 'погода' in message.text:
+        await message.reply('Вызовите команду /weather')
+    elif 'курс' in message.text:
+        await message.reply('Вызовите команду /curs')
+    elif 'музыка' in message.text:
+        await message.reply('Вызовите команду /music')
+    elif 'помощь' in message.text:
+        await message.reply('Вызовите команду /help')
+    else:
+        await message.reply('Ты что решил поразговарить с машиной??')
 
 
 if __name__ == '__main__':
